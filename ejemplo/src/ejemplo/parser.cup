@@ -1,0 +1,33 @@
+package ejemplo;
+import java_cup.runtime.Symbol;
+
+parser code {:
+        public parser(AnalizadorLexico lex) { 
+            super(lex);   
+	}
+        public void setAccion(String tipo,String mensaje,String accion){
+        }
+        public void syntax_error(Symbol s){
+            setAccion("ERROR","Error Sintaxis token: " + s.right,"");
+        }
+        
+:}
+
+/* Terminals (tokens returned by the scanner). */
+terminal           DPUNTO, LS, CD,SPACE, ENTER, PWD, PUNTO, TOUCH, MKDIR, MV,RM, RMDIR, CP;
+terminal String    TEXTO,PATH, ERROR;
+/* Non-terminals */
+non terminal            s;
+
+
+/* The grammar */
+start with s;
+
+s ::=   LS ENTER {: parser.setAccion("LS","","");:}
+        | CD  ENTER {: parser.setAccion("CD","","");:}
+        | CD SPACE PATH:e ENTER {: parser.setAccion("CD PATH","",e);:} 
+        | CD SPACE DPUNTO ENTER {: parser.setAccion("CD ..","","");:}
+        | PWD ENTER {: parser.setAccion("PWD","","");:}
+        | ERROR:e ENTER {: parser.setAccion("ERROR LEXICO","Error Lexico en: "+e,e);:}
+        | error:e {:parser.syntax_error((Symbol) e); :}
+        ;
