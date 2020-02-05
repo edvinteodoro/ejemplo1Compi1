@@ -6,6 +6,7 @@ parser code {:
             super(lex);   
 	}
         public void setAccion(String tipo,String mensaje,String accion){
+            System.out.println(tipo+"         "+mensaje);
         }
         public void syntax_error(Symbol s){
             setAccion("ERROR","Error Sintaxis token: " + s.right,"");
@@ -23,7 +24,7 @@ non terminal            s;
 /* The grammar */
 start with s;
 
-s ::=   LS ENTER {: parser.setAccion("LS","","");:}
+s ::=   LS  ENTER {: parser.setAccion("LS","","");:} 
         | CD  ENTER {: parser.setAccion("CD","","");:}
         | CD SPACE PATH:e ENTER {: parser.setAccion("CD PATH","",e);:} 
         | CD SPACE DPUNTO ENTER {: parser.setAccion("CD ..","","");:}
