@@ -1,0 +1,39 @@
+package ejemplo;
+import java_cup.runtime.Symbol;
+
+parser code {:
+        public parser(AnalizadorLexico lex) { 
+            super(lex);   
+	}
+        public void syntax_error(Symbol s){
+            System.out.println("ERROR: "+" Error Sintaxis token: " + s.value);
+        }
+        public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+            
+        }
+        
+:}
+
+/* Terminals (tokens returned by the scanner). */
+terminal           MAS, MENOS,POR, DIV,PARA,PARC;
+terminal Integer    NUMERO;
+/* Non-terminals */
+non terminal            s;
+non terminal Integer operacion;
+
+precedence left MAS, MENOS; 
+precedence left POR, DIV;
+
+/* The grammar */
+start with s;
+
+s ::=  operacion:e {:System.out.println("Total: "+e);:}
+;
+operacion ::= operacion:a MAS operacion:e {:System.out.println(" OP: "+a+"+"+e+"\n"); RESULT=a+e;:} 
+               |  operacion:a MENOS operacion:e {:System.out.println(" OP: "+a+"-"+e+"\n"); RESULT=a-e;:}
+               |  operacion:a POR operacion:e {:System.out.println(" OP: "+a+"*"+e+"\n"); RESULT=a*e;:}
+               |  operacion:a DIV operacion:e {:System.out.println(" OP: "+a+"/"+e+"\n"); RESULT=a/e;:} 
+               |  PARA operacion:e PARC {:System.out.println(" OP: ("+e+")\n"); RESULT=e;:}
+               |  NUMERO:e {:System.out.println(" NUM: "+e+"\n"); RESULT=e;:}
+               | error {:RESULT = 0;:}
+    ;

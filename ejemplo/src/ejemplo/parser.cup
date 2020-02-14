@@ -31,4 +31,5 @@ s ::=   LS  ENTER {: parser.setAccion("LS","","");:}
         | PWD ENTER {: parser.setAccion("PWD","","");:}
         | ERROR:e ENTER {: parser.setAccion("ERROR LEXICO","Error Lexico en: "+e,e);:}
         | error:e {:parser.syntax_error((Symbol) e); :}
-        ;
+        | {:System.out.println("Esto es lambda");:}
+;
